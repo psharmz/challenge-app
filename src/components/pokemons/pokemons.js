@@ -88,6 +88,10 @@ componentDidMount() {
    searchable: false, 
    filterOptions: {
       names: uniqueTypes, 
+      logic: (rowValues, filters) => {
+        const result = filters.every(val => rowValues.includes(val));
+        return !result; 
+     }
    },
    customBodyRender: (value, tableMeta, updateValue) => {
     return value.toString(); 
@@ -102,7 +106,12 @@ componentDidMount() {
    sort: false,
    searchable: false, 
    filterOptions: {
-      names: uniqueWeaks
+      names: uniqueWeaks, 
+      logic: (rowValues, filters) => {
+        const result = filters.every(val => rowValues.includes(val));
+        return !result; 
+     }
+
    },
    customBodyRender: (value, tableMeta, updateValue) => {
     return value.toString(); 
