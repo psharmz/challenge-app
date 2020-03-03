@@ -3,6 +3,12 @@ import React, { Component } from 'react';
 import MUIDataTable from "mui-datatables";
 
 
+  function getUniques(dupeArray) {
+    return [...new Set(dupeArray)]; 
+  }
+
+
+
 class GetPokemons extends Component {
     constructor(props){
         super(props);
@@ -42,6 +48,20 @@ componentDidMount() {
   render() {
         const {error, isLoaded, posts} = this.state;
 
+        const data = posts.map(posts => ([posts.name, posts.num, posts.type, posts.weaknesses]));
+        const initTypeArray = posts.map(posts => posts.type).flat(); 
+        const initWeakArray = posts.map(posts => posts.weaknesses).flat(); 
+
+        const uniqueTypes = getUniques(initTypeArray);
+        const uniqueWeaks = getUniques(initWeakArray);
+        
+        console.log(uniqueTypes);
+
+
+        const options = {
+        filterType: 'multiselect',
+    };
+
         //“name,” “num,” “type,” and “weaknesses.”
         //only searchable on name
         const columns = [
@@ -65,7 +85,14 @@ componentDidMount() {
   options: {
    filter: true,
    sort: false,
-   searchable: false
+   searchable: false, 
+   filterOptions: {
+      names: uniqueTypes, 
+   },
+   customBodyRender: (value, tableMeta, updateValue) => {
+    return value.toString(); 
+
+   }
   }
  },
  {
@@ -73,17 +100,20 @@ componentDidMount() {
   options: {
    filter: true,
    sort: false,
-   searchable: false
+   searchable: false, 
+   filterOptions: {
+      names: uniqueWeaks
+   },
+   customBodyRender: (value, tableMeta, updateValue) => {
+    return value.toString(); 
+
+   }
   }
  },
 ];
 
 
-        const data = posts.map(posts => ([posts.name, posts.num, posts.type.toString(), posts.weaknesses.toString()]));
 
-        const options = {
-  			filterType: 'checkbox',
-		};
 
         if(error){
             return <div>Error in loading</div>
